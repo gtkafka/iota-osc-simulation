@@ -1,0 +1,269 @@
+# Corrections 
+#      Added OSC section
+#      oq -> oqd downstream of q15
+#     quads q11,12,15 &16 are decoupled from corresponding quads in visinity of OSC section
+$E=100;  =>         100
+   $P=sqrt(($E+$Me)^2-$Me^2);  =>  100.509704
+   $gamma=1+$E/$Me;  =>  196.693414
+   $beta=sqrt(1-1/$gamma^2);  => 0.999987076
+   $Bro=1.e11/$c*$P;  =>  335.264286
+  $Rdip=70;  =>          70
+  $Bdip=$Bro/$Rdip;  =>   4.7894898
+  $Ldip60=60/180*$PI*$Rdip;  =>  73.3038286
+  $Ldip30=30/180*$PI*$Rdip;  =>  36.6519143
+#---------------
+# OSC
+$BdipCh=4.22;  =>           4
+$LdipCh=10;  =>          18  # 12.9 cm = 0.6 cm
+  $PhiCh=180/$PI*$BdipCh*$LdipCh/$Bro;  =>  12.3046095
+# Wiggler parameters
+$Bwgl=0;  =>           0
+$Lwgl=8 / 4;  =>           2
+  $PhiWgl=180/$PI*$Bwgl*$Lwgl/$Bro/2;  =>           0
+#
+$gChF=-0.198 	 ;  =>-0.674666667
+#
+$gChD=  0.82808576*0.989
+$gChF1=      -0.582
+$DeltaL=16
+#
+$gq12c=       0
+$gq11c=       0
+#	
+$gq17=      -0.269
+$gq18=   0.2213378
+$gq2= 0.424828531
+$gq3=      -0.305
+$gq4=       0.383
+# q6 	 
+$gq5=      -0.373
+$gq6=       0.504
+$gq7= 0.433906667
+$gq8=-0.290606667
+$gq9=    0.303187
+$gq10=-0.261273333
+$gq11= 0.327919333
+# q16 	
+$gq12=-0.266837333
+# q15	
+$gq13= 0.229232667
+# q14
+#	
+$gq14=-0.338849  ;  =>   -0.338849  
+# q14	
+$gq15=-0.338849  ;  =>   -0.338849  
+# q14	
+$gq16=-0.338849  ;  =>   -0.338849  
+# q14
+$Disp=       0.65;  =>        0.65
+#chicane center:
+$BetaX=0.859
+$BetaY=300
+$DispX=30.7	
+#-----------------
+OptiM
+Energy[MeV]=$E  Mass[MeV]=$Me
+Emittance: ex[cm]=5^2*5.88e-06  ey[cm]= 5^2*5.88e-06  DP/P=5*0.00013
+Initial:	BetaX[cm]=$BetaX	BetaY[cm]=$BetaY	
+	AlfaX=0     	AlfaY=0 
+	DispX[cm]=$DispX 	DispY[cm]=0
+	Dsp_PrimeX=0 	DspPrimeY=0 
+	X=0.	Y=0.	Z=0.
+	tetaX=0.     tetaY=0.
+#  Elements: O,I-drift, D,B-sector dipole, G-magnet edge 
+#       Q-quad, S-sextipole, C,CC-solenoid and its focusing part only
+#       M-multipole(length=0), K,Z-transverse and longitudinal correctors
+#       A,W-RF cavity(standing wave), E-electroctatic acc.section
+#       X-transfer matrix (next 6 lines have to hold the matrix itself)
+#       R-combined magneto-electrostatic bend, L - electrostatic quad
+#       F-Litium lens, H-Scraper or aperture
+#       T & U - transverse and longitudinal scattering
+#
+#Uncoment 3 lines below to make a reference to an external file
+#file reference start
+#file_reference_number file_name
+#file reference end
+#Above file_reference_number can be any number within 0-9;
+#You can make references up to 10 files between
+#lines "file reference start" and "file reference end" 
+#
+begin lattice. Number of periods=1
+# OSC half
+#OSCDRIFT
+#
+qChF oqo bChm gChm od gChp bChp
+oqo  qChD oqc qChF1 oL oWend
+#
+bWGLhp gWGLp oW1 
+gWGLm bWGLm gWGLm oW  gWGLp bWGLp gWGLp oW
+gWGLm bWGLm gWGLm oW  gWGLp bWGLp gWGLp oW
+gWGLm bWGLm gWGLm oW  gWGLp bWGLp gWGLp oW
+gWGLm bWGLm gWGLm oW  gWGLp bWGLp gWGLp oW
+gWGLm bWGLm gWGLm oW  gWGLp bWGLp gWGLp oW
+gWGLm bWGLm gWGLm oW  gWGLp bWGLp gWGLp oW
+gWGLm bWGLm gWGLm oW  gWGLp bWGLp gWGLp oW
+gWGLm bWGLm gWGLm oW  gWGLp bWGLp gWGLp oW1 
+gWGLm bWGLhm 
+#
+oow q11c oq2 ibpm ob 
+
+gb30 b30 Gb30
+ob ibpm oq3 oq q10 oq0 oqd q9 oq o1a
+o1a oq q8 oq0 oqd q7 oq oq3 ibpm ob 
+Gb60 b60 gb60
+ob ibpm oq q6 od22 oqd q5 oqd od22 q4 oq ibpm ob 
+Gb60 b60 gb60
+ob oq q3 oq1 oqd q2 oqd oq1 q1 oq ibpm o1
+
+o1 ibpm oq q20 oq oq1 oq q19 oq oq1 oq q18 oq ob 
+Gb30 b30 gb30
+ob oq q17 oq oq1a oq q16 oq oq2a oq q15 oq oq3a oq q14 oq oq4a
+
+oq4a oq q14 oq oq3a oq q15 oq oq2a oq q16 oq oq1a oq q17 oq ob
+gb30 b30 Gb30
+ob oq q18 oq oq1 oq q19 oq oq1 oq q20 oq ibpm o1
+
+o1 ibpm oq q1 oq1 oqd q2 oqd oq1 q3 oq ob
+gb60 b60 Gb60
+ob ibpm oq q4 od22 oqd q5 oqd od22 q6 oq ibpm ob
+gb60 b60 Gb60
+ ob ibpm oq3 oq q7 oqd oq0 q8 oq o1a
+o1a oq q9 oqd oq0 q10 oq oq3 ibpm ob
+Gb30 b30 gb30
+
+ob ibpm oq2 q11c oow
+#
+bWGLhm gWGLm
+oW1 gWGLp bWGLp gWGLp  oW gWGLm bWGLm gWGLm
+oW gWGLp bWGLp gWGLp  oW gWGLm bWGLm gWGLm
+oW gWGLp bWGLp gWGLp  oW gWGLm bWGLm gWGLm
+oW gWGLp bWGLp gWGLp  oW gWGLm bWGLm gWGLm
+oW gWGLp bWGLp gWGLp  oW gWGLm bWGLm gWGLm
+oW gWGLp bWGLp gWGLp  oW gWGLm bWGLm gWGLm
+oW gWGLp bWGLp gWGLp  oW gWGLm bWGLm gWGLm
+oW gWGLp bWGLp gWGLp  oW gWGLm bWGLm gWGLm
+oW1 gWGLp bWGLhp
+#
+oWend oL qChF1 oqc qChD  oqo
+bChp gChp od gChm bChm oqo qChF
+
+end lattice
+
+begin list: dL=1.  dB=.1  dG=0.01  dS=0.01
+
+oqo 	L[cm]=6       
+oqc 	L[cm]=6+$DeltaL       
+oqq 	L[cm]=10.5       
+oL 	L[cm]=20.65       
+od 	L[cm]=6       
+oow	L[cm]=42.25
+bChp 	L[cm]=$LdipCh         	B[kG]=$BdipCh         	G[kG/cm]=0        	Tilt[deg]=0
+gChp 	B[kG]=$BdipCh         Angle[deg]=$PhiCh  EffLen[cm]=0  Tilt[deg]=0  
+bChm 	L[cm]=$LdipCh         	B[kG]=-$BdipCh         G[kG/cm]=0        	Tilt[deg]=0
+gChm 	B[kG]=-$BdipCh         Angle[deg]=$PhiCh  EffLen[cm]=0  Tilt[deg]=0  
+# wigler 
+bWGLp 	L[cm]=$Lwgl          	B[kG]=$Bwgl          	G[kG/cm]=0        	Tilt[deg]=0
+gWGLp 	B[kG]=$Bwgl          	Angle[deg]=$PhiWgl   	EffLen[cm]=0  	Tilt[deg]=0  
+bWGLm 	L[cm]=$Lwgl          	B[kG]=-$Bwgl          	G[kG/cm]=0        	Tilt[deg]=0
+gWGLm 	B[kG]=-$Bwgl          	Angle[deg]=$PhiWgl   	EffLen[cm]=0  	Tilt[deg]=0  
+bWGLhp 	L[cm]=$Lwgl/2          	B[kG]=$Bwgl          	G[kG/cm]=0        	Tilt[deg]=0
+bWGLhm 	L[cm]=$Lwgl/2          	B[kG]=-$Bwgl          	G[kG/cm]=0        	Tilt[deg]=0
+#
+oW 	L[cm]=$Lwgl          
+oW1 	L[cm]=0.626    
+oWend 	L[cm]=6.466+35.382-6-$DeltaL    
+
+ibpm	L[cm]=9
+od22       	L[cm]=23              
+oq 	L[cm]=6.25
+ob 	L[cm]=31       
+o1 	L[cm]=90      
+oqd	L[cm]=12.5
+odd        	L[cm]=32
+   
+o1a 	L[cm]=75          
+o41	L[cm]=59.25
+oq2	L[cm]=10     
+oq5	L[cm]=111
+
+oq8	L[cm]=50
+oq0	L[cm]=29.5			
+oq1        	L[cm]=0.5        
+oq3        	L[cm]=20        
+oq6	L[cm]=61
+oq7        	L[cm]=91.5     
+
+oq1a       	L[cm]=1   
+oq2a       	L[cm]=61       
+oq3a	L[cm]=1
+oq4a       	L[cm]=85       
+o4a        	L[cm]=8 
+			
+b60 	L[cm]=$Ldip60       B[kG]=$Bdip
+b30 	L[cm]=$Ldip30       B[kG]=$Bdip
+gb30	B[kG]=$Bdip          Angle[deg]=0   	EffLen[cm]=1  	Tilt[deg]=0  
+Gb30       	B[kG]=$Bdip	   Angle[deg]=0  	EffLen[cm]=1  	Tilt[deg]=0  
+
+gb60	B[kG]=$Bdip          Angle[deg]=0   	EffLen[cm]=1  	Tilt[deg]=0  
+Gb60	B[kG]=$Bdip          Angle[deg]=0   	EffLen[cm]=1  	Tilt[deg]=0  
+
+q1 	L[cm]=21         	G[kG/cm]=0.2728714 	Tilt[deg]=0
+q2 	L[cm]=21         	G[kG/cm]=-0.5067163 	Tilt[deg]=0
+q3 	L[cm]=21         	G[kG/cm]=0.3958146 	Tilt[deg]=0
+q4 	L[cm]=21         	G[kG/cm]=0.405   	Tilt[deg]=0
+q5 	L[cm]=21         	G[kG/cm]=-0.41   	Tilt[deg]=0
+q6 	L[cm]=21         	G[kG/cm]=0.32    	Tilt[deg]=0
+q7 	L[cm]=21         	G[kG/cm]=-0.285  	Tilt[deg]=0
+q8 	L[cm]=21         	G[kG/cm]=0.385   	Tilt[deg]=0
+q9 	L[cm]=21         	G[kG/cm]=0.245   	Tilt[deg]=0
+q10 	L[cm]=21         	G[kG/cm]=-0.24   	Tilt[deg]=0
+q11 	L[cm]=21         	G[kG/cm]=0.329589 	Tilt[deg]=0
+q12 	L[cm]=21         	G[kG/cm]=-0.26202 	Tilt[deg]=0
+q13 	L[cm]=21         	G[kG/cm]=0.2220441 	Tilt[deg]=0
+q14 	L[cm]=21         	G[kG/cm]=0.1569586 	Tilt[deg]=0
+q15 	L[cm]=21         	G[kG/cm]=-0.2176509 	Tilt[deg]=0
+q16 	L[cm]=21         	G[kG/cm]=0.2301871 	Tilt[deg]=0
+q17 	L[cm]=21         	G[kG/cm]=-0.1188311 	Tilt[deg]=0
+q18 	L[cm]=21         	G[kG/cm]=0.2303131 	Tilt[deg]=0
+q19 	L[cm]=21         	G[kG/cm]=-0.4042118 	Tilt[deg]=0
+q20 	L[cm]=21         	G[kG/cm]=0.2523653 	Tilt[deg]=0
+
+qChF 	L[cm]=4          	G[kG/cm]=-0.198  	Tilt[deg]=0
+qChD 	L[cm]=15         	G[kG/cm]=0.7939768 	Tilt[deg]=0
+qChF1 	L[cm]=15         	G[kG/cm]=-0.517  	Tilt[deg]=0
+q11c 	L[cm]=21         	G[kG/cm]=0       	Tilt[deg]=0
+q12c 	L[cm]=21         	G[kG/cm]=0       	Tilt[deg]=0
+
+end list of elements
+#
+BetaFitBlock  dL[cm]=0.01  dB[kGs]=0.001  dG[kGs/cm]=1e-05
+#Required parameters and their accuracy listed below(dPARM<=0. - no fitting)
+#Maximum Betas[cm] and MomentumCompaction are on the next line
+BtXmax=4000  dBtXmax=1  BtYmax=2000  dBtYmax=1  Alfa=0  dAlfa=0
+#Fitting parameters at the end of the lattice
+Beta_X[cm]=0 	dBeta_X[cm]=0 	Alfa_X=0  	dAlfa_X=0.00001
+Beta_Y[cm]=0 	dBeta_Y[cm]=0 	Alfa_Y=0  	dAlfa_Y=0.00001
+Disp_X[cm]=0 	dDisp_X[cm]=0 	D_prime_X=0 	dD_prime_X=0.00001 
+Disp_Y[cm]=0 	dDisp_Y[cm]=0 	D_prime_Y=0 	dD_prime_Y=0 
+Qx=2.90 	dQx=0.0 
+Qy=1.95 	dQy=0.0 
+
+#To create a Fitting at intermidiate element: uncomment the line above, 
+# write the correct element number and insert six lines describing the
+# fit parameters. You can use up to 4 intermidiate points
+#Each point has to be determined as described above
+#
+#Insert groups of elements below. Each group has to be located on one line.
+#Start from the letter describing the type of changable parameter such as: L:, B:, G: 
+G: q20
+G: q19
+G: q18
+G: q17
+G: q16
+G: q15
+G: q14
+G: q1
+G: q2
+G: q3
+EndBetaFitBlock
+	

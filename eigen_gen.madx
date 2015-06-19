@@ -1,0 +1,53 @@
+OPTION, ECHO;
+!ASSIGN, ECHO="line.echo";
+ptc_enforce6d, flag=true;
+call, file=iota9.madx;
+
+beam, PARTICLE=electron,ENERGY=0.1005110034,radiate;
+
+use, period=osc_iota;
+ic=6;
+eigic=6;
+
+select,flag=twiss,clear;
+select, flag=twiss, column=name, s, dx, dpx;
+twiss,chrom,file=twiss.values;
+
+emit;
+touschek;
+
+plot, table=twiss, haxis=s, vaxis1=betx,bety, vaxis2=dx,
+colour=100, interpolate=true, file="oscbypass", title="OSC Insert",noversion;
+plot, table=twiss, haxis=s, vaxis=dx,
+colour=100, interpolate=true, file="oscbypass", title="OSC Insert",noversion;
+
+select, flag=survey, column=name,s,x,z;
+survey, file=survey.bypass;
+select, flag=survey, clear;
+
+ptc_create_universe;
+PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+!ptc_setswitch,debuglevel=0,exact_mis=true,time=true,totalpath=false;
+
+    select,flag=ptc_twiss,clear;
+    select,flag=ptc_twiss,column=name,
+    eign11,eign12,eign13,eign14,eign15,eign16,
+    eign21,eign22,eign23,eign24,eign25,eign26,
+    eign31,eign32,eign33,eign34,eign35,eign36,
+    eign41,eign42,eign43,eign44,eign45,eign46,
+    eign51,eign52,eign53,eign54,eign55,eign56,
+    eign61,eign62,eign63,eign64,eign65,eign66;
+
+PTC_TWISS,closed_orbit,icase=eigic,file=ptc_track,no=1;
+
+
+select,flag=ptc_twiss,clear;
+select,flag=ptc_twiss, column=name,s,re51,re52,re56,re53,re54,re56;
+PTC_TWISS,closed_orbit,icase=ic,file=ptc_rmatrix,no=1;
+
+select,flag=ptc_twiss,clear;
+select,flag=ptc_twiss, column=name,s,beta11,beta13,beta31,beta33, alfa11, disp1, disp1p,
+                                eign11, eign51, eign15, eign55,gama11,gama31,gama13,gama33;
+PTC_TWISS,closed_orbit,icase=ic,file=ptc_abc,no=1;
+
+ptc_end;

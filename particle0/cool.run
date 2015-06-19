@@ -1,0 +1,19 @@
+OPTION, -ECHO;
+ptc_enforce6d, flag=true;
+call, file=particle0/cool.kick
+call, file=particle0/iota9.madx;
+beam, PARTICLE=electron,ENERGY=0.1005110034,radiate;
+use, period=osc_iota;
+select,flag=twiss,clear;
+select, flag=twiss, column=name, s, dx, dpx;
+twiss,chrom,file=twiss.values;
+PTC_CREATE_UNIVERSE;
+PTC_CREATE_LAYOUT,model=2,method=6,nst=1,exact;
+call,file=particle0/cooltrack0;
+use,period=osc_iota;
+PTC_OBSERVE,place=oend;
+PTC_OBSERVE,place=okicker;
+PTC_TRACK,icase=6,onetable,dump,turns=1,radiation,file=particle0/track;
+PTC_TRACK_END;
+PTC_END;
+STOP;

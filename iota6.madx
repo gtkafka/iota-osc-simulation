@@ -1,0 +1,299 @@
+! IOTA Version 5.0
+! Date: 10/23/2013
+! By: G.Kafka, A.Valishev
+! Comments:
+!
+
+!****************** Instrumentation ***********************************
+obpm:    DRIFT,      L=    0.045 ;
+ibpm:    MONITOR ;
+ibpmA1R: ibpm;
+ibpmA2R: ibpm;
+ibpmA1L: ibpm;
+ibpmA2L: ibpm;
+ibpmB1R: ibpm;
+ibpmB2R: ibpm;
+ibpmB1L: ibpm;
+ibpmB2L: ibpm;
+ibpmC1R: ibpm;
+ibpmC2R: ibpm;
+ibpmC1L: ibpm;
+ibpmC2L: ibpm;
+ibpmD1R: ibpm;
+ibpmD2R: ibpm;
+ibpmD1L: ibpm;
+ibpmD2L: ibpm;
+ibpmE1R: ibpm;
+ibpmE2R: ibpm;
+ibpmE1L: ibpm;
+ibpmE2L: ibpm;
+
+bpmA1R:  LINE=(obpm, ibpmA1R, obpm);
+bpmA2R:  LINE=(obpm, ibpmA2R, obpm);
+bpmA1L:  LINE=(obpm, ibpmA1L, obpm);
+bpmA2L:  LINE=(obpm, ibpmA2L, obpm);
+bpmB1R:  LINE=(obpm, ibpmB1R, obpm);
+bpmB2R:  LINE=(obpm, ibpmB2R, obpm);
+bpmB1L:  LINE=(obpm, ibpmB1L, obpm);
+bpmB2L:  LINE=(obpm, ibpmB2L, obpm);
+bpmC1R:  LINE=(obpm, ibpmC1R, obpm);
+bpmC2R:  LINE=(obpm, ibpmC2R, obpm);
+bpmC1L:  LINE=(obpm, ibpmC1L, obpm);
+bpmC2L:  LINE=(obpm, ibpmC2L, obpm);
+bpmD1R:  LINE=(obpm, ibpmD1R, obpm);
+bpmD2R:  LINE=(obpm, ibpmD2R, obpm);
+bpmD1L:  LINE=(obpm, ibpmD1L, obpm);
+bpmD2L:  LINE=(obpm, ibpmD2L, obpm);
+bpmE1R:  LINE=(obpm, ibpmE1R, obpm);
+bpmE2R:  LINE=(obpm, ibpmE2R, obpm);
+bpmE1L:  LINE=(obpm, ibpmE1L, obpm);
+bpmE2L:  LINE=(obpm, ibpmE2L, obpm);
+
+!****************** Dipole magnets ************;
+
+b60: SBEND,  L=0.7330382858,  ANGLE=1.047197551,;
+b30: SBEND,  L=0.3665191429,  ANGLE=0.5235987756,;
+obcoil:    DRIFT, L= 0.0895; ! Width of coil
+ldip:	   MARKER;
+rdip:	   MARKER;
+l_coil:	   ldip;
+r_coil:	   rdip;
+D1R:   LINE=(l_coil, obcoil, b30, obcoil, r_coil);
+D2R:   LINE=(l_coil, obcoil, b60, obcoil, r_coil);
+D3R:   LINE=(l_coil, obcoil, b60, obcoil, r_coil);
+D4R:   LINE=(l_coil, obcoil, b30, obcoil, r_coil);
+D4L:   LINE=(l_coil, obcoil, b30, obcoil, r_coil);
+D3L:   LINE=(l_coil, obcoil, b60, obcoil, r_coil);
+D2L:   LINE=(l_coil, obcoil, b60, obcoil, r_coil);
+D1L:   LINE=(l_coil, obcoil, b30, obcoil, r_coil);
+oqcoil:    DRIFT, L=0.0625 ; ! quadrupole "coil-to-iron"
+
+!***************** Quadrupole magnets for OSC ******************************
+
+bWGLp: SBEND, L=0.02, ANGLE=0,  E1=0,  E2=0 ;
+bWGLm: SBEND, L=0.02, ANGLE=0,  E1=0,  E2=0 ;
+bWGLhp: SBEND, L=0.01, ANGLE=0,  E2=0 ;
+bWGLhm: SBEND, L=0.01, ANGLE=0,  E1=0 ;
+
+q1: QUADRUPOLE,  L=      0.21,  K1=6.278088921;
+q2: QUADRUPOLE,  L=      0.21,  K1=-14.58635829;
+q3: QUADRUPOLE,  L=      0.21,  K1=12.54873595;
+q4: QUADRUPOLE,  L=      0.21,  K1=13.27311075;
+q5: QUADRUPOLE,  L=      0.21,  K1=-12.52743037;
+q6: QUADRUPOLE,  L=      0.21,  K1=8.948164551;
+q7: QUADRUPOLE,  L=      0.21,  K1=-8.351620248;
+q8: QUADRUPOLE,  L=      0.21,  K1=11.33434176;
+q9: QUADRUPOLE,  L=      0.21,  K1=7.307667717;
+q10: QUADRUPOLE,  L=      0.21,  K1=-6.860259489;
+q14: QUADRUPOLE,  L=      0.21,  K1=3.951563155;
+q15: QUADRUPOLE,  L=      0.21,  K1=-4.992902822;
+q16: QUADRUPOLE,  L=      0.21,  K1=4.610112273;
+q17: QUADRUPOLE,  L=      0.21,  K1=-4.754332824;
+q18: QUADRUPOLE,  L=      0.21,  K1=6.608150918;
+q19: QUADRUPOLE,  L=      0.21,  K1=-12.03509043;
+q20: QUADRUPOLE,  L=      0.21,  K1=8.738768552;
+qChF: QUADRUPOLE,  L=      0.04,  K1=-5.905788604;
+qChD: QUADRUPOLE,  L=      0.15,  K1=24.42779723;
+qChF1: QUADRUPOLE,  L=      0.15,  K1=-17.35943923;
+q11c: QUADRUPOLE,  L=      0.21,  K1=         0;
+q12c: QUADRUPOLE,  L=      0.21,  K1=         0;
+
+oq: DRIFT, L=0.0625 ;     oqo:DRIFT, L=0.06;     oqc: DRIFT, L=0.22 ; oqq: DRIFT, L=0.105 ;
+oL: DRIFT, L=0.504-0.1965 ;  oL1: DRIFT, L=0.1965;   odo: DRIFT, L=0.06 ;   oW: DRIFT, L=0.02 ;
+oW1: DRIFT, L=0.00626 ;
+oWend: DRIFT, L=0.19848-0.02 ; obpmo: DRIFT, L=0.09 ; obo: DRIFT, L=0.315 ; o1: DRIFT, L=0.9 ;
+oqd: DRIFT, L=0.125 ;     oq1a: DRIFT, L=0.01 ;  oq2a: DRIFT, L=0.61 ; oq3a: DRIFT, L=0.01 ;
+oq4a: DRIFT, L=0.85 ;     oq1: DRIFT, L=0.01 ;   oq2: DRIFT, L=0.1 ; oq3: DRIFT, L=0.01 ;
+o1a: DRIFT, L=1.245 ;
+
+cav: RFCAVITY, volt=0.025, L=0.4, harmon=8, lag=0;
+rf: RFCAVITY, volt=0.025, L=0, harmon=8, lag=0;
+
+QA1R: LINE=(oqcoil, q14, oqcoil);
+QA2R: LINE=(oqcoil, q15, oqcoil);
+QA3R: LINE=(oqcoil, q16, oqcoil);
+QA4R: LINE=(oqcoil, q17, oqcoil);
+QA1L: LINE=(oqcoil, q14, oqcoil);
+QA2L: LINE=(oqcoil, q15, oqcoil);
+QA3L: LINE=(oqcoil, q16, oqcoil);
+QA4L: LINE=(oqcoil, q17, oqcoil);
+
+QB1R: LINE=(oqcoil, q18, oqcoil);
+QB2R: LINE=(oqcoil, q19, oqcoil);
+QB3R: LINE=(oqcoil, q20, oqcoil);
+QB4R: LINE=(oqcoil, q1, oqcoil);
+QB5R: LINE=(oqcoil, q2, oqcoil);
+QB6R: LINE=(oqcoil, q3, oqcoil);
+QB1L: LINE=(oqcoil, q18, oqcoil);
+QB2L: LINE=(oqcoil, q19, oqcoil);
+QB3L: LINE=(oqcoil, q20, oqcoil);
+QB4L: LINE=(oqcoil, q1, oqcoil);
+QB5L: LINE=(oqcoil, q2, oqcoil);
+QB6L: LINE=(oqcoil, q3, oqcoil);
+
+QC1R: LINE=(oqcoil, q4, oqcoil);
+QC2R: LINE=(oqcoil, q5, oqcoil);
+QC3R: LINE=(oqcoil, q6, oqcoil);
+QC1L: LINE=(oqcoil, q4, oqcoil);
+QC2L: LINE=(oqcoil, q5, oqcoil);
+QC3L: LINE=(oqcoil, q6, oqcoil);
+
+QD1R: LINE=(oqcoil, q7, oqcoil);
+QD2R: LINE=(oqcoil, q8, oqcoil);
+QD3R: LINE=(oqcoil, q9, oqcoil);
+QD4R: LINE=(oqcoil, q10, oqcoil);
+QD1L: LINE=(oqcoil, q7, oqcoil);
+QD2L: LINE=(oqcoil, q8, oqcoil);
+QD3L: LINE=(oqcoil, q9, oqcoil);
+QD4L: LINE=(oqcoil, q10, oqcoil);
+
+QE1R: LINE=(oqcoil, q11, oqcoil);
+QE2R: LINE=(oqcoil, q12, oqcoil);
+QE3:  LINE=(oqcoil, q13,q13, oqcoil);
+QE1L: LINE=(oqcoil, q11, oqcoil);
+QE2L: LINE=(oqcoil, q12, oqcoil);
+
+QF1R:  LINE=(oqcoil, q11c, oqcoil);
+QF2R:  LINE=(oqcoil, q12c, oqcoil);
+QF1L:  LINE=(oqcoil, q11c, oqcoil);
+QF2L:  LINE=(oqcoil, q12c, oqcoil);
+
+!******************** Observation points Bypass magnets*************************************
+
+b1Chp: SBEND, L=0.1, ANGLE= 0.125870848,  K2=0, K3=0, E1=0.,           E2=0.125870848 ;
+b2Chm: SBEND, L=0.1, ANGLE=-0.125870848,  K2=0, K3=0, E1=-0.125870848, E2=0. ;
+b3Chm: SBEND, L=0.1, ANGLE=-0.125870848,  K2=0, K3=0, E1=0.,           E2=-0.125870848 ;
+b4Chp: SBEND, L=0.1, ANGLE= 0.125870848,  K2=0, K3=0, E1=0.125870848,  E2=0. ;
+
+!b1Chp: SBEND, L=0.1, ANGLE=0;
+!b2Chm: SBEND, L=0.1, ANGLE=0;
+!b3Chm: SBEND, L=0.1, ANGLE=0;
+!b4Chp: SBEND, L=0.1, ANGLE=0;
+
+!b1chp->k2=9470;
+!b4chp->k2=4302;
+!b2chm->k2=5712;
+!b3chm->k2=9228;
+
+!b1chp->k2 =9470.806846 ;
+!b2chm->k2 =5712.872681 ;
+!b3chm->k2 =9228.579926 ;
+!b4chp->k2 =4302.006891 ;
+
+b1a: MARKER;
+b1b: MARKER;
+b2a: MARKER;
+b2b: MARKER;
+b3a: MARKER;
+b3b: MARKER;
+b4a: MARKER;
+b4b: MARKER;
+midpoint: MARKER;
+bmidpoint: MARKER;
+ostart: MARKER;
+oend: MARKER;
+B1L: LINE=(b1a,b1chp,b1b);
+B2L: LINE=(b2a,b2chm,b2b);
+B2R: LINE=(b3a,b3chm,b3b);
+B1R: LINE=(b4a,b4chp,b4b);
+!******************** Drifts *************************************************
+
+oA:    DRIFT, L=0.76 ;              ! Half of injection drift
+!oA:    DRIFT, L=0.61;
+oA1:   DRIFT, L=0.01 ;              ! gap between QA1 & QA2
+oA2:   DRIFT, L=0.52 ;              ! drift between QA2 & QA3
+oArf2:  DRIFT, L=0.3 ;
+oArf1:  DRIFT, L=0.12;
+oA3:   DRIFT, L=0.01 ;              ! gap between QA3 & QA4
+
+oB:    DRIFT, L=0.9  ;              ! Half of the nonlinear magnet drift
+oB1:   DRIFT, L=0.005 ;              ! gap between QB1 & QB2 (QB5 & QB6)
+oB2:   DRIFT, L=0.005 ;              ! gap between QB2 & QB3 (QB4 & QB5)
+
+oC1:   DRIFT, L=0.23 ;              ! drift between QC1 & QC2
+oC2:   DRIFT, L=0.23 ;              ! drift between QC2 & QC3
+
+obm:   DRIFT, L=0.2205 ;            ! drift on both sides of dipole magnet
+
+oD:    DRIFT, L=0.75 ;              ! Half of long drift in "D" straight
+oD1:   DRIFT, L=0.2 ;              ! drift between dipole and QD1 (QD4)
+oD2:   DRIFT, L=0.295 ;              ! drift between QD1 & QD2 (QD3 & QD4)
+
+oE1:   DRIFT, L=0.1 ;
+oE2:   DRIFT, L=1.02 ;
+oE3:   DRIFT, L=0.6825 ;
+
+oF1:   DRIFT, L=0.005;		  ! gap between QF1 and QF2
+oF2:   DRIFT, L=0.0525;
+
+!**********************************SEXTUPOLES*****************************************
+k2l=10;
+!S01: MULTIPOLE, KNL={0,0,k2l};
+S1: SEXTUPOLE, L=0.06, K2=17128, K2S=0;
+S2: SEXTUPOLE, L=0.06, K2=17128;
+oho1: DRIFT, L=0.0;
+
+T1: OCTUPOLE, L=0.0, K3=0;
+T2: OCTUPOLE, L=0.0, K3=0;
+
+tl=t1->L;
+sl=s1->L;
+o1l=oho1->L;
+o2l=0.06-sl-tl-o1l;
+
+oqs: DRIFT, L=0.04;
+SS1: SEXTUPOLE, L=0.02, K2S=0;
+SS2: SEXTUPOLE, L=0.02, K2S=0;
+
+ms:multipole, ksl:={0, 0, 0, 0};
+
+!**********************************LONGITUDINAL KICK*****************************************
+
+call,file="cool.kick";
+
+oho2: DRIFT, L=o2l;
+BR_Line:  LINE=(obm, QB1R, oB1, QB2R, oB2, QB3R, bpmB1R, oB, oB, bpmB2R, QB4R, oB2, QB5R, oB1, QB6R, obm);
+BL_Line:  LINE=(obm, QB6L, oB1, QB5L, oB2, QB4L, bpmB2L, oB, oB, bpmB1L, QB3L, oB2, QB2L, oB1, QB1L, obm);
+CR_Line:  LINE=(obm, bpmC1R, QC1R, oC1, QC2R, oC2, QC3R, bpmC2R, obm);
+CL_Line:  LINE=(obm, bpmC2L, QC3L, oC2, QC2L, oC1, QC1L, bpmC1L, obm);
+DR_Line:  LINE=(obm, bpmD1R, oD1, QD1R, oD2, QD2R, oD, oD, QD3R, oD2, QD4R, oD1, bpmD2R, obm);
+DL_Line:  LINE=(obm, bpmD2L, oD1, QD4L, oD2, QD3L, oD, oD, QD2L, oD2, QD1L, oD1, bpmD1L, obm);
+
+EL_Line: LINE=(obm, bpmE1L, oq2, QF2L, oL);
+
+BYPASS_L: LINE=(ostart,
+oL1,bWGLhm, oW1, bWGLp, oW, bWGLm, oW, bWGLp, oW, bWGLm,
+oW, bWGLp, oW, bWGLm, oW, bWGLp, oW, bWGLm, oW, bWGLp, oW, bWGLm, oW,
+bWGLp, oW, bWGLm, oW, bWGLp, oW, bWGLm, oW, bWGLp, oW, bWGLm, oW1, bWGLhp,
+SS1,oWend, qChF1, oqc, qChD, OQO, b1L, oho1, s1, t1, oho2, b2L, OQO, qChF,
+);
+
+BYPASS_R: LINE=(
+qChF, OQO, b2R, oho2, t2, s1, oho1, b1R, OQO, qChD, oqc, qChF1, oWend,SS1,
+bWGLhp, oW1, bWGLm, oW, bWGLp, oW, bWGLm, oW, bWGLp, oW, bWGLm, oW, bWGLp,
+oW, bWGLm, oW, bWGLp, oW, bWGLm, oW, bWGLp, oW, bWGLm, oW, bWGLp, oW,
+bWGLm, oW, bWGLp, oW, bWGLm, oW, bWGLp, oW1, bWGLhm,oL1,oend,lkick);
+
+!replace S02 with oqo
+
+ER_Line: LINE=(oL, QF2R, oq2, bpmE2L,obm);
+
+MACHINE: LINE=(
+BYPASS_R, ER_Line, D4L, DL_Line, D3L, CL_Line, D2L, BL_Line, D1L,
+obm, QA4L, oA3, QA3L, bpmA2L, oA2, QA2L, oA1, QA1L, bpmA1L, oA, midpoint,rf,
+oA, bpmA1R, QA1R, oA1, QA2R, oA2, bpmA2R, QA3R, oA3, QA4R, obm,
+D1R, BR_Line, D2R, CR_Line, D3R, DR_Line, D4R, EL_Line, BYPASS_L);
+
+OSC_IOTA: LINE=(
+BYPASS_L, BYPASS_R, ER_Line,
+D4L, DL_Line, D3L, CL_Line, D2L, BL_Line, D1L,
+obm, QA4L, oA3, QA3L, bpmA2L, oA2, QA2L, oA1, QA1L, bpmA1L, oA, midpoint,
+oA, bpmA1R, QA1R, oA1, QA2R, oA2, rf, bpmA2R, QA3R, oA3, QA4R, obm,
+D1R, BR_Line, D2R, CR_Line, D3R, DR_Line, D4R, EL_Line
+);
+
+!!!replace "OArf1, cav" with "oA2, rf" 0.3 L with 0 L
+
+BYPASS: LINE=(
+BYPASS_L, BYPASS_R,
+);

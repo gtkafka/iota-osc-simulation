@@ -1,0 +1,353 @@
+OPTION, ECHO;
+!ASSIGN, ECHO="line.echo";
+ptc_enforce6d, flag=true;
+call, file=iota9.madx;
+
+!!!!!!!!!!!!swithces!!!!!!!!!!!!!
+eigen=1;
+maketables=1;
+ptcmatch=1;
+!fitter=1;
+tracking=89; !-1 for real beam,
+
+beam, PARTICLE=electron,ENERGY=0.1005110034,radiate;
+rf: rfcavity, volt=0.025, harmon=8, lag=0, L=0.;
+
+use, period=osc_iota;
+ic=6;
+eigic=6;
+trackic=6;
+select,flag=twiss,clear;
+select, flag=twiss, column=name, s, dx, dpx;
+twiss,chrom,file=twiss.values;
+
+emit;
+touschek;
+
+plot, table=twiss, haxis=s, vaxis1=betx,bety, vaxis2=dx,
+colour=100, interpolate=true, file="oscbypass", title="OSC Insert",noversion;
+plot, table=twiss, haxis=s, vaxis=dx,
+colour=100, interpolate=true, file="oscbypass", title="OSC Insert",noversion;
+
+select, flag=survey, column=name,s,x,z;
+survey, file=survey.bypass;
+select, flag=survey, clear;
+
+ptc_create_universe;
+PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+!ptc_setswitch,debuglevel=0,exact_mis=true,time=true,totalpath=false;
+
+    select,flag=ptc_twiss,clear;
+    select,flag=ptc_twiss,column=name,
+    eign11,eign12,eign13,eign14,eign15,eign16,
+    eign21,eign22,eign23,eign24,eign25,eign26,
+    eign31,eign32,eign33,eign34,eign35,eign36,
+    eign41,eign42,eign43,eign44,eign45,eign46,
+    eign51,eign52,eign53,eign54,eign55,eign56,
+    eign61,eign62,eign63,eign64,eign65,eign66;
+
+PTC_TWISS,closed_orbit,icase=eigic,file=ptc_track,no=1;
+
+
+select,flag=ptc_twiss,clear;
+select,flag=ptc_twiss, column=name,s,re51,re52,re56,re53,re54,re56;
+PTC_TWISS,closed_orbit,icase=ic,file=ptc_rmatrix,no=1;
+
+select,flag=ptc_twiss,clear;
+select,flag=ptc_twiss, column=name,s,beta11,beta13,beta31,beta33, alfa11, disp1, disp1p,
+                                eign11, eign51, eign15, eign55,gama11,gama31,gama13,gama33;
+PTC_TWISS,closed_orbit,icase=ic,file=ptc_abc,no=1;
+
+ptc_end;
+
+if(fitter==1){
+fit:macro=
+{
+    use,period=osc_iota;
+    !use,period=bypass;
+    beam, PARTICLE=electron, ENERGY=0.1005110034,
+    EX=1.16e-06, EY=1.16e-06, SIGE=0.0000123,SIGT=0.02;
+    select,flag=twiss,clear;
+    twiss file="osc.twiss"; 
+    !betx=9.58428, alfx=1.08598,bety=0.413595, alfy=-0.533429,
+    !dx=-1.32629, dpx=1.13943, chrom, deltap=0.0000123;
+};
+
+match, use_macro;
+    vary,name=qChF1->k1,step=1.0e-6;
+    vary,name=qChF->k1,step=1.0e-6;
+    vary,name=qChD->k1,step=1.0e-6;
+    use_macro, name=fit;
+    constraint,sequence=machine,RANGE=oend,betx=9.58428, bety=0.413595,dx=-1.32629;
+    jacobian,calls=1000,tolerance=1.e-20;
+endmatch;
+
+match, use_macro;
+        vary,name=q14->k1,step=1.0e-5;
+        vary,name=q15->k1,step=1.0e-5;
+        vary,name=q16->k1,step=1.0e-5;
+        vary,name=q17->k1,step=1.0e-5;
+        vary,name=q18->k1,step=1.0e-5;
+        use_macro, name=fit;
+        constraint,sequence=machine,RANGE=midpoint,alfx=0.0,alfy=0.0,dpx=0.0;
+        jacobian,calls=1000,tolerance=1.e-15;
+endmatch;
+
+
+value,q14->k1;
+value,q15->k1;
+value,q16->k1;
+};
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+if(maketables==1)
+{
+    value,grad;
+    create,table=RMAT,column=_name,'r51','r52','r56';
+    ptc_select,table=RMAT,column='r51',polynomial=5,monomial='100000';
+    ptc_select,table=RMAT,column='r52',polynomial=5,monomial='010000';
+    ptc_select,table=RMAT,column='r56',polynomial=5,monomial='000001';
+
+    create,table=TMAT,column=_name,'t511','t512','t516','t522','t525','t526','t533','t534','t544','t566';
+
+    ptc_select,table=TMAT,column='t511',polynomial=5,monomial='200000';
+    ptc_select,table=TMAT,column='t512',polynomial=5,monomial='110000';
+    ptc_select,table=TMAT,column='t516',polynomial=5,monomial='100001';
+
+    ptc_select,table=TMAT,column='t522',polynomial=5,monomial='020000';
+    ptc_select,table=TMAT,column='t525',polynomial=5,monomial='010010';
+    ptc_select,table=TMAT,column='t526',polynomial=5,monomial='010001';
+
+    ptc_select,table=TMAT,column='t533',polynomial=5,monomial='002000';
+    ptc_select,table=TMAT,column='t534',polynomial=5,monomial='001100';
+    ptc_select,table=TMAT,column='t544',polynomial=5,monomial='000200';
+
+    ptc_select,table=TMAT,column='t566',polynomial=5,monomial='000002';
+
+    select_ptc_normal, dq1=1;
+    select_ptc_normal, dq1=2;
+};
+
+if(ptcmatch==1)
+{
+    sext_match: macro=
+    {
+        use,period=bypass;
+        ptc_create_universe;
+        PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+        !ptc_setswitch,debuglevel=0,exact_mis=true,time=true,totalpath=false;
+
+        ptc_select,table=TMAT,column='t511',polynomial=5,monomial='200000';
+        ptc_select,table=TMAT,column='t512',polynomial=5,monomial='110000';
+        ptc_select,table=TMAT,column='t516',polynomial=5,monomial='100001';
+
+        ptc_select,table=TMAT,column='t522',polynomial=5,monomial='020000';
+        ptc_select,table=TMAT,column='t525',polynomial=5,monomial='010010';
+        ptc_select,table=TMAT,column='t526',polynomial=5,monomial='010001';
+
+        ptc_select,table=TMAT,column='t533',polynomial=5,monomial='002000';
+        ptc_select,table=TMAT,column='t534',polynomial=5,monomial='001100';
+        ptc_select,table=TMAT,column='t544',polynomial=5,monomial='000200';
+
+        ptc_select,table=TMAT,column='t566',polynomial=5,monomial='000002';
+
+        ptc_twiss,table=twiss,icase=6,no=3,
+        betx=9.554087455,alfx=1.08362,
+        bety=0.413595,alfy=-0.533429,dx=-1.32622, dpx=1.13943,betz=0.000001;
+
+        WRITE TABLE=TMAT,FILE=ptc_TMATRIX;
+
+        value,table(TMAT,bypass$end,t511);
+        value,table(TMAT,bypass$end,t512);
+        value,table(TMAT,bypass$end,t522);
+        
+
+        value,s1->k2;
+        value,s2->k2;
+        value,s1->k2s;
+	    value, ss1->k2s;
+	    value, ss2->k2s;
+
+	value, b1Chp->k2;
+	value, b4Chp->k2;
+	
+	value,b2Chm->k2;
+	value,b3Chm->k2;
+
+    value,ms->ksl->k2sl;
+
+	ptc_end;
+    };
+
+match, use_macro;
+!vary, name=b1Chp->k2, step=1;
+!vary, name=b4Chp->k2, step=1;
+!vary, name=b2Chm->k2, step=1;
+!vary, name=b3Chm->k2, step=1;
+
+!vary, name=t1->k3, step=1;
+!vary, name=t2->k3, step=1;
+
+!vary, name=SS1->k2s, step=0.001;
+!vary, name=SS2->k2s, step=0.001;
+!vary, name=s1->k2s, step=0.01;
+vary, name=s1->k2, step=0.01;
+!vary, name=s2->k2, step=1;
+!vary, name=ms->ksl->k2sl, step=0.001;
+
+use_macro,name=sext_match;
+
+constraint,expr=table(TMAT,bypass$end,t522)=0;
+!constraint,expr=table(TMAT,bypass$end,t544)=0;
+!constraint,expr=table(TMAT,bypass$end,t511)=0;
+!constraint,expr=table(TMAT,bypass$end,t511)=0;
+!constraint,expr=table(TMAT,bypass$end,t522)=0;
+!constraint,expr=table(TMAT,bypass$end,t522)=0;
+
+value,expr;
+jacobian, tolerance=1e-20,calls=1000;
+};
+
+ptc_track_end;
+ptc_end;
+
+if(tracking==-1)
+{
+    ptc_create_universe;
+    PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+    call,file=input.beam99;
+    use,period=bypass;
+    ptc_observe,place=b1a;
+    ptc_observe,place=b1b;
+    ptc_observe,place=b2a;
+    ptc_observe,place=b2b;
+    ptc_observe,place=b3a;
+    ptc_observe,place=b3b;
+    ptc_observe,place=b4a;
+    ptc_observe,place=b4b;
+    ptc_observe,place=oend;
+    ptc_trackline,everystep,onetable,file=../realtrack;
+    ptc_track_end;
+    ptc_end;
+};
+
+if(tracking==0.5)
+{
+    ptc_create_universe;
+    PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+    call,file=input.beamx0.5;
+    use,period=bypass;
+    ptc_observe,place=b1a;
+    ptc_observe,place=b1b;
+    ptc_observe,place=b2a;
+    ptc_observe,place=b2b;
+    ptc_observe,place=b3a;
+    ptc_observe,place=b3b;
+    ptc_observe,place=b4a;
+    ptc_observe,place=b4b;
+    ptc_observe,place=oend;
+    ptc_trackline,everystep,onetable,file=../0track;
+    ptc_track_end;
+    ptc_end;
+};
+
+if(tracking==1)
+{
+    ptc_create_universe;
+    PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+    call,file=input.beam1;
+    use,period=bypass;
+    ptc_observe,place=b1a;
+    ptc_observe,place=b1b;
+    ptc_observe,place=b2a;
+    ptc_observe,place=b2b;
+    ptc_observe,place=b3a;
+    ptc_observe,place=b3b;
+    ptc_observe,place=b4a;
+    ptc_observe,place=b4b;
+    ptc_observe,place=oend;
+    ptc_trackline,everystep,onetable,file=../1track;
+    ptc_track_end;
+    ptc_end;
+};
+
+if(tracking==1.5)
+{
+    ptc_create_universe;
+    PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+    call,file=input.beamx1.5;
+    use,period=bypass;
+    ptc_observe,place=b1a;
+    ptc_observe,place=b1b;
+    ptc_observe,place=b2a;
+    ptc_observe,place=b2b;
+    ptc_observe,place=b3a;
+    ptc_observe,place=b3b;
+    ptc_observe,place=b4a;
+    ptc_observe,place=b4b;
+    ptc_observe,place=oend;
+    ptc_trackline,everystep,onetable,file=../1.5track;
+    ptc_track_end;
+    ptc_end;
+};
+
+if(tracking==2)
+{
+    ptc_create_universe;
+    PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+    call,file=input.beam2;
+    use,period=bypass;
+    ptc_observe,place=b1a;
+    ptc_observe,place=b1b;
+    ptc_observe,place=b2a;
+    ptc_observe,place=b2b;
+    ptc_observe,place=b3a;
+    ptc_observe,place=b3b;
+    ptc_observe,place=b4a;
+    ptc_observe,place=b4b;
+    ptc_observe,place=oend;
+    ptc_trackline,everystep,onetable,file=../2track;
+    ptc_track_end;
+    ptc_end;
+};
+
+if(tracking==2.5)
+{
+    ptc_create_universe;
+    PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+    !call,file=input.beamx2.5;
+    ptc_start, x=0 , px=0 , y= -0.000113227362921 , py= -2.78194183649e-07 , t=0, pt=0;
+    ptc_observe,place=b1a;
+    ptc_observe,place=b1b;
+    ptc_observe,place=b2a;
+    ptc_observe,place=b2b;
+    ptc_observe,place=b3a;
+    ptc_observe,place=b3b;
+    ptc_observe,place=b4a;
+    ptc_observe,place=b4b;
+    ptc_observe,place=oend;
+    !ptc_trackline,everystep,onetable,file=../2.5track;
+    ptc_track,icase=trackic,onetable,dump,turns=1,file=../2track;
+    ptc_track_end;
+    ptc_end;
+};
+value, b1Chp->angle;
+value, b1Chp->L;
+assign, echo = "gradients", truncate;
+value t1->k3;
+value t2->k3;
+value s1->k2;
+value s1->k2s;
+value s2->k2;
+value b1chp->k2;
+value b2chm->k2;
+value b3chm->k2;
+value b4chp->k2;
+value b1chp->k3;
+value b2chm->k3;
+value b3chm->k3;
+value b4chp->k3;
+
+stop;

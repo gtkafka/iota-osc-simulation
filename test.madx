@@ -1,0 +1,46 @@
+!TITLE Converted from MAIN: - C:\Documents and Settings\Gene\Desktop\test.opt.  Mon Jun 23 11:54:00 2014
+
+!  Energy=100 MeV, massa=0.511006 MeV
+!  BetaX=1 m,  AlphaX=0,  BetaY=1 m,  AlphaY=0 
+!  DispX=0 m,  DispPX=0,  DispY=0 m,  DispPY=0 
+
+OPTION, -ECHO;
+ASSIGN, ECHO="line.echo";
+
+o: DRIFT, L=0.26 ;
+D: SBEND,  L=1,  ANGLE=1,  E1=0 ,  HGAP=0.01, FINT=0.5,  E2=0 ,  HGAP=0.01, FINT=0.5;
+qF: QUADRUPOLE,  L=0.2,  K1=1.34222;
+qD: QUADRUPOLE,  L=0.2,  K1=-2.68445;
+
+rf: rfcavity, volt=0.1, harmon=8, lag=0, L=0.;
+lkick: MATRIX, KICK6=1e-7;
+
+MACHINE: LINE=( o, qF, o, rf, D, o, qD, o, D, o, qF, o, D, o, qD, o, D, lkick);
+beam, PARTICLE=electron,ENERGY=0.1005110034,radiate;
+use,period=machine;
+
+select,flag=twiss,clear;
+select, flag=twiss, column=name, s, dx, dpx;
+twiss,chrom,file=twiss.values;
+
+emit;
+touschek;
+
+plot, table=twiss, haxis=s, vaxis1=betx,bety, vaxis2=dx,
+colour=100, interpolate=true, file="RING", title="TESTRING",noversion;
+plot, table=twiss, haxis=s, vaxis=dx,
+colour=100, interpolate=true, file="RING", title="TESTRING",noversion;
+
+ptc_create_universe;
+PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+ptc_start, x= 0.0001 , px= 0.0 , y= 0.0001 , py= 0.0 , t= 0.001 , pt= 0.00001 ;
+
+use,period=machine;
+
+ptc_track,icase=6,element_by_element,onetable,closed_orbit,dump,turns=100000,file=track;
+!ptc_track,icase=6,element_by_element,onetable,closed_orbit,dump,turns=100000,radiation,file=synchtrack;
+
+ptc_track_end;
+ptc_end;
+
+stop;

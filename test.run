@@ -1,0 +1,38 @@
+OPTION, ECHO;
+ptc_enforce6d, flag=true;
+
+o1: drift, l=0.01;
+b1: sbend, l=1, angle=3.1415926535897/2;
+
+rf: rfcavity, volt=0.025, harmon=8, lag=0, L=0.;
+
+ring1: line=(o1,b1,o1,b1,o1,b1,o1,b1,rf);
+
+beam, PARTICLE=electron,ENERGY=0.1005110034,radiate;
+
+use, period=ring1;
+
+select,flag=twiss,clear;
+select, flag=twiss, column=name, s, dx, dpx;
+twiss,chrom,file=twiss.values;
+
+emit;
+touschek;
+
+plot, table=twiss, haxis=s, vaxis1=betx,bety, vaxis2=dx,
+colour=100, interpolate=true, file="RING", title="TESTRING",noversion;
+plot, table=twiss, haxis=s, vaxis=dx,
+colour=100, interpolate=true, file="RING", title="TESTRING",noversion;
+
+
+ptc_create_universe;
+PTC_CREATE_LAYOUT,model=2,method=6,nst=3,exact;
+call,file=particle0/cooltrack0;
+use,period=ring1;
+ptc_observe,place=oend;
+ptc_track,icase=6,element_by_element,onetable,closed_orbit,dump,turns=1,file=particle0/track;
+!ptc_trackline,everystep,onetable,file=testtrack;
+ptc_track_end;
+ptc_end;
+
+stop;

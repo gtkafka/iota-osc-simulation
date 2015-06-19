@@ -1,0 +1,125 @@
+!  Kinetic energy=100 MeV, mass=0.511003 MeV
+!  BetaX=0.011 m,  AlphaX=0,  BetaY=0.6 m,  AlphaY=0 
+!  DispX=0.2 m,  DispPX=0,  DispY=0 m,  DispPY=0 
+lkick:drift,l=0;
+OPTION, -ECHO;
+ASSIGN, ECHO="line.echo";
+
+oL: DRIFT, L=    0.2 ;
+od: DRIFT, L=      0.06 ;
+oW: DRIFT, L=     0.025 ;
+oW1: DRIFT, L=   0.00626 ;
+oow: DRIFT, L=   0.26898 ;
+oqc: DRIFT, L=      0.06 ;
+
+dibpm: DRIFT, L=      0.09 ;
+od22: DRIFT, L=      0.23 ;
+oq: DRIFT, L=    0.0625 ;
+ob: DRIFT, L=      0.31 ;
+o1: DRIFT, L=       0.9 ;
+oqd: DRIFT, L=     0.125 ;
+o1a: DRIFT, L=      0.75 ;
+oq2: DRIFT, L=       0.1 ;
+oq0: DRIFT, L=     0.295 ;
+oq1: DRIFT, L=     0.005 ;
+oq3: DRIFT, L=       0.2 ;
+oq1a: DRIFT, L=      0.01 ;
+oq2a: DRIFT, L=      0.61 ;
+oq3a: DRIFT, L=      0.01 ;
+oq4a: DRIFT, L=      0.85 ;
+ibpm: MONITOR ;
+
+b1Chp: SBEND,   L=0.2,  ANGLE=0.1246777594 ,   E1=0,             E2=0.1246777594;
+b2Chm: SBEND,   L=0.2,  ANGLE=-0.1246777594 ,  E1=-0.1246777594 , E2=0 ;
+b3Chm: SBEND,   L=0.2,  ANGLE=-0.1246777594 ,  E1=0,             E2=-0.1246777594;
+b4Chp: SBEND,   L=0.2,  ANGLE=0.1246777594 ,   E1=0.1246777594 ,  E2=0 ;
+
+bWGLp: SBEND,  L=0.025,  ANGLE=0,  E1=0,  E2=0 ;
+bWGLm: SBEND,  L=0.025,  ANGLE=0,  E1=0,  E2=0 ;
+bWGLhp: SBEND,  L=0.0125,  ANGLE=0,  E2=0 ;
+bWGLhm: SBEND,  L=0.0125,  ANGLE=0,  E1=0 ;
+
+b60: SBEND,  L=0.7330382858,  ANGLE=1.047197551,  E1=0,  HGAP=0.01, FINT=0.5,  E2=0,  HGAP=0.01, FINT=0.5;
+b30: SBEND,  L=0.3665191429,  ANGLE=0.5235987756, E1=0 , HGAP=0.01, FINT=0.5,  E2=0,  HGAP=0.01, FINT=0.5;
+
+b1a: MARKER;
+b1b: MARKER;
+b2a: MARKER;
+b2b: MARKER;
+b3a: MARKER;
+b3b: MARKER;
+b4a: MARKER;
+b4b: MARKER;
+
+mid_pickup: MARKER;
+mid_kicker: MARKER;
+
+oend: MARKER;
+okicker: MARKER;
+
+b1: LINE=(b1a,b1Chp,b1b);
+b2: LINE=(b2a,b2Chm,b2b);
+b3: LINE=(b3a,b3Chm,b3b);
+b4: LINE=(b4a,b4Chp,b4b);
+
+qChF: QUADRUPOLE,  L=      0.04,  K1=-10.58866139;
+qChD: QUADRUPOLE,  L=      0.15,  K1=26.6714958;
+qChF1: QUADRUPOLE,  L=      0.15,  K1=-23.09819543;
+q1: QUADRUPOLE,  L=      0.21,  K1=6.792775415;
+q2: QUADRUPOLE,  L=      0.21,  K1=-14.08371901;
+q3: QUADRUPOLE,  L=      0.21,  K1=13.14559046;
+q4: QUADRUPOLE,  L=      0.21,  K1=11.48377611;
+q5: QUADRUPOLE,  L=      0.21,  K1=-10.14155143;
+q6: QUADRUPOLE,  L=      0.21,  K1=6.860289316;
+q7: QUADRUPOLE,  L=      0.21,  K1=-8.054839457;
+q8: QUADRUPOLE,  L=      0.21,  K1=8.650041535;
+q9: QUADRUPOLE,  L=      0.21,  K1=-6.860557761;
+q10: QUADRUPOLE,  L=      0.21,  K1=5.219792482;
+q11c: QUADRUPOLE,  L=      0.21,  K1=-9.545007126;
+q14: QUADRUPOLE,  L=      0.21,  K1=5.155672917;
+q15: QUADRUPOLE,  L=      0.21,  K1=-5.795454752;
+q16: QUADRUPOLE,  L=      0.21,  K1=4.613109908;
+q17: QUADRUPOLE,  L=      0.21,  K1=-3.415347377;
+q18: QUADRUPOLE,  L=      0.21,  K1=4.711420409;
+q19: QUADRUPOLE,  L=      0.21,  K1=-9.516235795;
+q20: QUADRUPOLE,  L=      0.21,  K1=10.10392142;
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+!s1: SEXTUPOLE, L=0.06, K2=6599.501649;
+s1: SEXTUPOLE, L=0.06, K2=5792.739635;
+rf: RFCAVITY, VOLT=0.05, L=0, HARMON=8, LAG=0;
+
+OSC_IOTA: LINE=
+(
+
+mid_pickup,bWGLm, oW,bWGLp, oW,bWGLm, oW,
+bWGLp, oW,bWGLm, oW,bWGLp, oW,bWGLm, oW,
+bWGLp, oW,bWGLm, oW1,
+bWGLhp,
+oL, qChF1, oqc, qChD, oqc, b1, S1, b2, oqc, qChF,
+qChF, oqc, b3, S1, b4, oqc, qChD, oqc, qChF1, oL,  
+bWGLhp,
+oW1, bWGLm,oW, bWGLp,oW, bWGLm,oW, bWGLp,
+oW, bWGLm,oW, bWGLp,oW, bWGLm,oW, bWGLp,
+oW, bWGLm,mid_kicker,oW, bWGLp,oW, bWGLm,
+oW, bWGLp,oW, bWGLm,oW, bWGLp,oW, bWGLm,
+oW, bWGLp,oW, bWGLm,oW, bWGLp,oW1, bWGLhm,
+okicker, lkick, oend,
+oqc, oow, q11c, oq2, dibpm, ibpm, ob, b30, ob, dibpm, ibpm, oq3, oq, q10, oq0,
+oqd, q9, oq, o1a, o1a, oq, q8, oq0, oqd, q7, oq, oq3, dibpm, ibpm, ob, b60,  
+ob, dibpm, ibpm, oq, q6, od22, oqd, q5, oqd, od22, q4, oq, dibpm, ibpm, ob,  
+b60, ob, oq, q3, oq1, oqd, q2, oqd, oq1, q1, oq, dibpm, ibpm, o1, o1,  
+dibpm, ibpm, oq, q20, oq, oq1, oq, q19, oq, oq1, oq, q18, oq, ob, b30, ob,  
+oq, q17, oq, oq1a, oq, q16, oq, oq2a, oq, q15, oq, oq3a, oq, q14, oq, oq4a,  
+rf,
+oq4a, oq, q14, oq, oq3a, oq, q15, oq, oq2a, oq, q16, oq, oq1a, oq, q17, oq,
+ob, b30, ob, oq, q18, oq, oq1, oq, q19, oq, oq1, oq, q20, oq, dibpm, ibpm,  
+o1, o1, dibpm, ibpm, oq, q1, oq1, oqd, q2, oqd, oq1, q3, oq, ob, b60, ob,  
+dibpm, ibpm, oq, q4, od22, oqd, q5, oqd, od22, q6, oq, dibpm, ibpm, ob,  
+b60, ob, dibpm, ibpm, oq3, oq, q7, oqd, oq0, q8, oq, o1a, o1a, oq, q9, oqd,  
+oq0, q10, oq, oq3, dibpm, ibpm, ob, b30, ob, dibpm, ibpm, oq2, q11c, oow, oqc,
+
+bWGLhm, oW1,bWGLp, oW,
+bWGLm, oW,bWGLp, oW,bWGLm, oW,bWGLp, oW,
+bWGLm, oW,bWGLp, oW,bWGLm, oW,bWGLp, oW,
+);
